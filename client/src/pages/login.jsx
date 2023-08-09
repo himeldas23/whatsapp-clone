@@ -6,8 +6,15 @@ import { useRouter } from "next/router";
 import React from "react";
 import axios from 'axios';
 import { FcGoogle } from 'react-icons/fc'
+import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
+import { userInfo } from "os";
 function login() {
   const router = useRouter();
+
+  const [{},dispatch] = useStateProvider();
+
+
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const { user: {
@@ -19,6 +26,16 @@ function login() {
         const { data } = await axios.post(CHECK_USER_ROUTE, { email });
         console.log({ data });
         if (!data.status) {
+          dispatch({ type: reducerCases.SET_USER_USER, newUser: true});
+          dispatch({
+            type:reducerCases.SET_USER_INFO,
+            userInfo:{
+              name,
+              email,
+              profileImage,
+              status: "",
+            },
+          });
           router.push("/onboarding")
         }
       }
