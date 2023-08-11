@@ -1,9 +1,11 @@
+
+
 import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Image from "next/image"
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import axios from 'axios';
 import { FcGoogle } from 'react-icons/fc'
 import { useStateProvider } from "@/context/StateContext";
@@ -12,7 +14,11 @@ import { userInfo } from "os";
 function login() {
   const router = useRouter();
 
-  const [{},dispatch] = useStateProvider();
+  const [{userInfo,newUser},dispatch] = useStateProvider();
+
+  useEffect(()=>{
+    if(userInfo?.id && !newUser) router.push("/")
+  },[userInfo,newUser])
 
 
   const handleLogin = async () => {
@@ -38,6 +44,16 @@ function login() {
           });
           router.push("/onboarding")
         }
+        else{
+          const {id,name,email,profilePicture:profileImage,status} = data.data;
+          dispatch({
+            type:reducerCases.SET_USER_INFO,
+            userInfo:{
+              id,name,email,profileImage,status,
+            },
+          });
+          router.push("/")
+        }
       }
     } catch (err) {
       console.log(err);
@@ -59,3 +75,4 @@ function login() {
 }
 
 export default login;
+
