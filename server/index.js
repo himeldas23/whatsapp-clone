@@ -44,24 +44,28 @@ io.on("connection", (socket) => {
             });
         }
     })
-    socket.on("outgoing-voice-call",(data)=>{
+    socket.on("outgoing-voice-call", (data) => {
         const sendUserSocket = onlineUsers.get(data.to);
-        if(sendUserSocket){
-            socket.to(sendUserSocket).emit("incoming-voice-call",{
-                from:data.from,roomId=data.roomId,callType=data.callType
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("incoming-voice-call", {
+                from: data.from,
+                roomId: data.roomId, 
+                callType: data.callType, 
             });
         }
-    })
+    });
 
 
-    socket.on("outgoing-video-call",(data)=>{
+    socket.on("outgoing-video-call", (data) => {
         const sendUserSocket = onlineUsers.get(data.to);
-        if(sendUserSocket){
-            socket.to(sendUserSocket).emit("incoming-video-call",{
-                from:data.from,roomId=data.roomId,callType=data.callType
+        if (sendUserSocket) {
+            socket.to(sendUserSocket).emit("incoming-video-call", {
+                from: data.from,
+                roomId: data.roomId, 
+                callType: data.callType, 
             });
         }
-    })
+    });
 
     socket.on("reject-voice-call",(data)=>{
         const sendUserSocket = onlineUsers.get(data.from);
